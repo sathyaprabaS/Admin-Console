@@ -54,13 +54,13 @@ const Header: React.FC<HeaderProps> = ({
         product_type: selectedMakes.join(','),
         Date: selectedDurations.join(','),
       });
-
       const inventoryResponse = await fetch(`http://localhost:3000/admin/getFilterByInventoryCount?${queryParams.toString()}`);
       if (!inventoryResponse.ok) {
         throw new Error('Failed to fetch inventory data');
       }
       const inventoryData = await inventoryResponse.json();
-      onFilterApplyInventory(inventoryData); // Pass the data to the parent component
+      onFilterApplyInventory(inventoryData); 
+      console.log("onFilterApplyInventory",onFilterApplyInventory)
 
       const msrpResponse = await fetch(`http://localhost:3000/admin/getFilterByAverageMSRP?${queryParams.toString()}`);
       if (!msrpResponse.ok) {
@@ -68,6 +68,8 @@ const Header: React.FC<HeaderProps> = ({
       }
       const msrpData = await msrpResponse.json();
       onFilterApplyMSRP(msrpData); // Pass the data to the parent component
+      console.log("onFilterApplyMSRP",onFilterApplyMSRP)
+
 
     } catch (error) {
       console.error('Error fetching data:', error);

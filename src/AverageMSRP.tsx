@@ -62,7 +62,7 @@ function AverageMSRP({filteredDatas}) {
     <div style={{ padding: '16px' }}>
       <Box sx={{ display: "flex" }}>
         <Typography variant="h6" gutterBottom>
-          Inventory Count
+          Average MSRP
         </Typography>
         <div style={{ marginBottom: '20px', marginLeft: "10px" }}>
           <Button 
