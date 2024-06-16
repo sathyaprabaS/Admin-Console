@@ -1,40 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, TablePagination, Typography } from '@mui/material';
+import axios from 'axios';
 
-interface Row {
-  id: number;
+interface ProductData {
   date: string;
-  action: string;
+  newCount: number;
+  newTotalPrice: string;
+  newAveragePrice: string;
+  usedCount: number;
+  usedTotalPrice: string;
+  usedAveragePrice: string;
+  cpoCount: number;
+  cpoTotalPrice: string;
+  cpoAveragePrice: string;
+
 }
 
 function HistoryLog() {
   // Sample data for the table
-  const [rows, setRows] = useState<Row[]>([
-    { id: 1, date: '2023-01-01', action: 'Login' },
-    { id: 2, date: '2023-01-02', action: 'Logout' },
-    { id: 3, date: '2023-01-03', action: 'Viewed dashboard' },
-    { id: 4, date: '2023-01-04', action: 'Updated profile' },
-    { id: 5, date: '2023-01-05', action: 'Logged out' },
-    { id: 6, date: '2023-01-06', action: 'Deleted item' },
-    { id: 7, date: '2023-01-07', action: 'Viewed report' },
-    { id: 8, date: '2023-01-08', action: 'Added new record' },
-    { id: 9, date: '2023-01-09', action: 'Logged in' },
-    { id: 10, date: '2023-01-10', action: 'Logged out' },
-  ]);
-
-  // Pagination control
+  const [rows, setRows] = useState<ProductData[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // Handle page change
+  useEffect(() => {
+
+    axios.get('http://localhost:3000/admin/getAllHistory')
+      .then(response => setRows(response.data))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
+
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setPage(newPage);
   };
 
-  // Handle rows per page change
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+  const cellStyle = {
+    textAlign: 'center' 
   };
 
   return (
@@ -42,21 +46,37 @@ function HistoryLog() {
       <Typography variant="h6" gutterBottom>
         History Log
       </Typography>
-      <TableContainer>
+      <TableContainer sx={{backgroundColor:"white"}}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Action</TableCell>
+              <TableCell sx={cellStyle}>Date</TableCell>
+              <TableCell sx={cellStyle}>New Count</TableCell>
+              <TableCell sx={cellStyle}>New Total Price</TableCell>
+              <TableCell sx={cellStyle}>New Average Price</TableCell>
+              <TableCell sx={cellStyle}>Used Count</TableCell>
+              <TableCell sx={cellStyle}>Used Total Price</TableCell>
+              <TableCell sx={cellStyle}>Used Average Price</TableCell>
+              <TableCell sx={cellStyle}>cpo Count</TableCell>
+              <TableCell sx={cellStyle}>cpo Total Price</TableCell>
+              <TableCell sx={cellStyle}>cpo Average Price</TableCell>
+
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.id}</TableCell>
-                <TableCell>{row.date}</TableCell>
-                <TableCell>{row.action}</TableCell>
+            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+              <TableRow key={index}>
+                <TableCell sx={cellStyle}>{row.date}</TableCell>
+                <TableCell sx={cellStyle}>{row.newCount}</TableCell>
+                <TableCell sx={cellStyle}>{row.newTotalPrice}</TableCell>
+                <TableCell sx={cellStyle}>{row.newAveragePrice}</TableCell>
+                <TableCell sx={cellStyle}>{row.usedCount}</TableCell>
+                <TableCell sx={cellStyle}>{row.usedTotalPrice}</TableCell>
+                <TableCell sx={cellStyle}>{row.usedAveragePrice}</TableCell>
+                <TableCell sx={cellStyle}>{row.cpoCount}</TableCell>
+                <TableCell sx={cellStyle}>{row.cpoTotalPrice}</TableCell>
+                <TableCell sx={cellStyle}>{row.cpoAveragePrice}</TableCell>
+
               </TableRow>
             ))}
           </TableBody>
@@ -72,6 +92,7 @@ function HistoryLog() {
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
     </div>
+
   );
 }
 

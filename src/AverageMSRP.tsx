@@ -3,65 +3,61 @@ import { Typography, Button, Box } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import axios from 'axios';
 
+function AverageMSRP({filteredDatas}) {
 
-
-
-function InventoryCount({ filteredData,onRemoveAllFilters }) {
-  const [chartData, setChartData] = useState([]);
-  const [activeButton, setActiveButton] = useState('new');
-
-  const fetchData = async (type) => {
-    try {
-      let params = {};
-      switch (type) {
-        case 'new':
-          params = { condition: 'new' };
-          break;
-        case 'used':
-          params = { condition: 'used' };
-          break;
-        case 'ceo':
-          params = { condition: 'ceo' };
-          break;
-        default:
-          break;
+    const [chartData, setChartData] = useState([]);
+    const [activeButton, setActiveButton] = useState('new');
+  
+    const fetchData = async (type) => {
+      try {
+        let params = {};
+        switch (type) {
+          case 'new':
+            params = { condition: 'new' };
+            break;
+          case 'used':
+            params = { condition: 'used' };
+            break;
+          case 'ceo':
+            params = { condition: 'ceo' };
+            break;
+          default:
+            break;
+        }
+  
+        const response = await axios.get('http://localhost:3000/admin/getFilterByAverageMSRP', { params });
+        const data = response.data;
+  
+        const transformedData = data.map((item) => ({
+          date: item.Date,
+          averagePrice: item.averagePrice,
+        }));
+  
+        setChartData(transformedData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-
-      const response = await axios.get('http://localhost:3000/admin/getFilterByInventoryCount', { params });
-      const data = response.data;
-
-      // Transform the data to match the chart format
-      const transformedData = data.map((item) => ({
-        date: item.Date,
-        count: item.conditions.reduce((acc, condition) => acc + condition.count, 0),
-      }));
-
-      setChartData(transformedData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData('new');
-  }, []);
-
-  useEffect(() => {
-    if (filteredData.length > 0) {
-      const transformedData = filteredData.map((item) => ({
-        date: item.Date,
-        count: item.conditions.reduce((acc, condition) => acc + condition.count, 0),
-      }));
-      setChartData(transformedData);
-    }
-  }, [filteredData]);
-
-  const handleButtonClick = (type) => {
-    setActiveButton(type);
-    fetchData(type);
-    onRemoveAllFilters();
-  };
-
+    };
+  
+    useEffect(() => {
+      fetchData('new');
+    }, []);
+  
+    useEffect(() => {
+      if (filteredDatas.length > 0) {
+        const transformedData = filteredDatas.map((item) => ({
+          date: item.Date,
+          averagePrice: item.averagePrice,
+        }));
+        setChartData(transformedData);
+      }
+    }, [filteredDatas]);
+  
+    const handleButtonClick = (type) => {
+      setActiveButton(type);
+      fetchData(type);
+    };
+  
   return (
     <div style={{ padding: '16px' }}>
       <Box sx={{ display: "flex" }}>
@@ -109,12 +105,11 @@ function InventoryCount({ filteredData,onRemoveAllFilters }) {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Bar dataKey="count" fill="#ff9800" /> {/* Orange color */}
+            <Bar dataKey="averagePrice" fill="#ff9800" /> {/* Orange color */}
           </BarChart>
         </ResponsiveContainer>
       </div>
-    </div>
-  );
+    </div>  )
 }
 
-export default InventoryCount;
+export default AverageMSRP

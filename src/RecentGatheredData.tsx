@@ -26,17 +26,17 @@ function RecentGatheredData() {
   // Calculate counts and totals based on condition
   const countNew = data.filter(item => item.condition === 'new').length;
   const totalNew = data.reduce((acc, item) => {
-    return item.condition === 'new' ? acc + parseInt(item.price) : acc;
+    return item.condition === 'new' ? acc + parseInt(String(item.price)) : acc;
   }, 0);
 
   const countUsed = data.filter(item => item.condition === 'used').length;
   const totalUsed = data.reduce((acc, item) => {
-    return item.condition === 'used' ? acc + parseInt(item.price) : acc;
+    return item.condition === 'used' ? acc + parseInt(String(item.price)) : acc;
   }, 0);
 
   const countCPO = data.filter(item => item.condition === 'cpo').length;
   const totalCPO = data.reduce((acc, item) => {
-    return item.condition === 'cpo' ? acc + parseInt(item.price) : acc;
+    return item.condition === 'cpo' ? acc + parseInt(String(item.price)) : acc;
   }, 0);
 
   // Calculate averages
