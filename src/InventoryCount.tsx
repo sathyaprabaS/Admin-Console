@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 
-function InventoryCount({ filteredData,onRemoveAllFilters }) {
+function InventoryCount({ filteredData}) {
   const [chartData, setChartData] = useState([]);
   const [activeButton, setActiveButton] = useState('new');
 
@@ -20,8 +20,8 @@ function InventoryCount({ filteredData,onRemoveAllFilters }) {
         case 'used':
           params = { condition: 'used' };
           break;
-        case 'ceo':
-          params = { condition: 'ceo' };
+        case 'cpo':
+          params = { condition: 'cpo' };
           break;
         default:
           break;
@@ -58,9 +58,22 @@ function InventoryCount({ filteredData,onRemoveAllFilters }) {
 
   const handleButtonClick = (type) => {
     setActiveButton(type);
-    fetchData(type);
-    onRemoveAllFilters();
+
+    if (filteredData.length > 0) {
+      const filteredChartData = filteredData.map((item) => {
+        const conditionData = item.conditions.find((condition) => condition.condition === type);
+        return {
+          date: item.Date,
+          count: conditionData ? conditionData.count : 0,
+        };
+      });
+
+      setChartData(filteredChartData);
+    } else {
+      fetchData(type);
+    }
   };
+
 
   return (
     <div style={{ padding: '16px' }}>
@@ -90,14 +103,14 @@ function InventoryCount({ filteredData,onRemoveAllFilters }) {
             Used
           </Button>
           <Button 
-            onClick={() => handleButtonClick('ceo')} 
-            variant={activeButton === 'ceo' ? 'contained' : 'outlined'} 
+            onClick={() => handleButtonClick('cpo')} 
+            variant={activeButton === 'cpo' ? 'contained' : 'outlined'} 
             color="warning"
-            style={{ marginRight: '10px', backgroundColor: activeButton === 'ceo' ? '#ff9800' : 'white',
+            style={{ marginRight: '10px', backgroundColor: activeButton === 'cpo' ? '#ff9800' : 'white',
             }}
 
           >
-            CEO
+            CpO
           </Button>
         </div>
       </Box>

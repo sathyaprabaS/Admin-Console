@@ -18,8 +18,8 @@ function AverageMSRP({filteredDatas}) {
           case 'used':
             params = { condition: 'used' };
             break;
-          case 'ceo':
-            params = { condition: 'ceo' };
+          case 'cpo':
+            params = { condition: 'cpo' };
             break;
           default:
             break;
@@ -86,14 +86,14 @@ function AverageMSRP({filteredDatas}) {
             Used
           </Button>
           <Button 
-            onClick={() => handleButtonClick('ceo')} 
-            variant={activeButton === 'ceo' ? 'contained' : 'outlined'} 
+            onClick={() => handleButtonClick('cpo')} 
+            variant={activeButton === 'cpo' ? 'contained' : 'outlined'} 
             color="warning"
-            style={{ marginRight: '10px', backgroundColor: activeButton === 'ceo' ? '#ff9800' : 'white',
+            style={{ marginRight: '10px', backgroundColor: activeButton === 'cpo' ? '#ff9800' : 'white',
             }}
 
           >
-            CEO
+            CpO
           </Button>
         </div>
       </Box>

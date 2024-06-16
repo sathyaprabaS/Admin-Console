@@ -6,14 +6,12 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 type HeaderProps = {
   onFilterApplyMSRP: (data: any) => void; // Adjust 'any' to the actual data type if possible
   onFilterApplyInventory: (data: any) => void; // Adjust 'any' to the actual data type if possible
-  onRemoveAllFilters: () => void;
 };
 
 
 const Header: React.FC<HeaderProps> = ({
   onFilterApplyMSRP,
   onFilterApplyInventory,
-  onRemoveAllFilters
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [make, setMake] = useState({
@@ -69,7 +67,8 @@ const Header: React.FC<HeaderProps> = ({
       const msrpData = await msrpResponse.json();
       onFilterApplyMSRP(msrpData); // Pass the data to the parent component
       console.log("onFilterApplyMSRP",onFilterApplyMSRP)
-
+      setDrawerOpen(false);
+      removeAllFilters();
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -91,8 +90,7 @@ const Header: React.FC<HeaderProps> = ({
       ThisYear: false,
       LastYear: false,
     });
-    onRemoveAllFilters();
-    
+    setDrawerOpen(false);
   };
 
   const toggleDrawer = (open) => (event) => {
@@ -100,6 +98,10 @@ const Header: React.FC<HeaderProps> = ({
       return;
     }
     setDrawerOpen(open);
+    if (!open) {
+      removeAllFilters();
+    }
+
   };
 
   return (
@@ -107,18 +109,18 @@ const Header: React.FC<HeaderProps> = ({
       <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between', backgroundColor: 'gray' }}>
           <Typography variant="h6" style={{ flexGrow: 1, textAlign: 'left' }}>
-            Header
+            Inventory
           </Typography>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="h6" style={{ textAlign: 'center', flexGrow: 1 }}>
-              Select Dealer
+              Filter Data By
             </Typography>
-            <TextField
+            {/* <TextField
               variant="outlined"
               size="small"
               placeholder="Search..."
               style={{ marginRight: '16px' }}
-            />
+            /> */}
             <IconButton color="inherit" onClick={toggleDrawer(true)}>
               <FilterListIcon />
             </IconButton>
@@ -174,10 +176,10 @@ const Header: React.FC<HeaderProps> = ({
             ))}
           </FormGroup>
           <Box mt={2} display="flex" justifyContent="space-between">
-            <Button variant="contained" color="primary" onClick={applyFilter}>
+            <Button variant="contained" size="small" style={{backgroundColor:"orange"}} onClick={applyFilter}>
               APPLY FILTER
             </Button>
-            <Button variant="outlined" color="secondary" onClick={removeAllFilters}>
+            <Button variant="outlined" size="small" style={{color:"orange"}} onClick={removeAllFilters}>
               REMOVE ALL FILTERS
             </Button>
           </Box>
